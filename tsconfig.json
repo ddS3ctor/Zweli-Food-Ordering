@@ -3,7 +3,6 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "lib": ["es6", "dom", "esnext.asynciterable"],
-    "types": ["react", "react-native"],
     "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
