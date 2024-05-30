@@ -70,7 +70,7 @@ const ProductDetailsScreen= () => {
 
 
 
-            <Text style={styles.price}>R{product.price}</Text>
+            <Text style={styles.price}>R{product.price.toFixed(2)}</Text>
             <Button onPress={addToCart} text="Add to cart" />
         </View>
     );

@@ -28,7 +28,7 @@ export default function CartProvider({ children }: PropsWithChildren) {
   const total = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
-  );
+  ).toFixed(2);
 
   const addItem = (product: Product, size: CartItem['size']) => {
     const existingItem = items.find(
