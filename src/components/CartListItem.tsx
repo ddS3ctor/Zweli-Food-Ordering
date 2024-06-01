@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import React from 'react';
 import Colors from '../constants/Colors';
 import { CartItem } from '../types';
-import { defaultPizzaImage } from '@/src/components/ProductListItem';
+import { defaultPizzaImage } from '@/components/ProductListItem';
 import { FontAwesome } from '@expo/vector-icons';
 import { useCart } from '../provider/CartProvider';
 

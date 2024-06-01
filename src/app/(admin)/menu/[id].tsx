@@ -39,8 +39,9 @@ const ProductDetailsScreen= () => {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ title: product?.name}} />
-            <Image source={{ uri: product.image || defaultPizzaImage}} style={styles.image}/>
-
+            <Image source={{ uri: product.image || defaultPizzaImage}} 
+            style={styles.image}
+            />
 
             <Text style={styles.title}>{product.name}</Text>
             <Text style={styles.price}>R{product.price}</Text>

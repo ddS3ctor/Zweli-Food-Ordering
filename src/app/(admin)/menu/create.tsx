@@ -1,7 +1,12 @@
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image } from 'react-native';
 import Button from '@/components/Button';
+import { defaultPizzaImage } from '@/components/ProductListItem';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import * as ImagePicker from 'expo-image-picker';
+import { Stack } from 'expo-router';
+
 
 
 const CreateProductScreen = () => {
@@ -9,6 +14,7 @@ const CreateProductScreen = () => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [errors, setErrors] = useState('');
+    const [image, setImage] = useState<string | null >(null);
 
     const resetField = () => {
         setName('');
@@ -17,18 +23,68 @@ const CreateProductScreen = () => {
 
     const validateInput = () => {
 
+        setErrors('');
+        if (!name){
+            setErrors('Name is required!');
+            return false;
+        }
+
+        if (!price){
+            setErrors('Price is reuired!');
+            return false;
+        }
+
+        if (isNaN(parseFloat(price))){
+            setErrors('Price is not a number.');
+            return false;
+        }
+
+        return true;
     };
 
     const onCreate = () => {
-        console.log('Creating Product: ', name);
+
+        if (!validateInput()){
+            return;
+        }
+
+        console.warn('Creating Product: ', name);
 
         // save in the database
         resetField();
     };
 
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+        
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+        }
+    };
+
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Name</Text>
+            <Stack.Screen options={{ title: "Create Product" }} />
+
+            <Image 
+                source={{ uri: image || defaultPizzaImage }} 
+                style={styles.image}
+                />
+            <Text 
+                onPress={pickImage} 
+                style={styles.textButton}>Select Image
+            </Text>
+
+            <Text 
+                style={styles.label}>Name
+            </Text>
+
             <TextInput 
                 value={name} 
                 onChangeText={setName}
@@ -39,11 +95,12 @@ const CreateProductScreen = () => {
             <TextInput
                 value={price}
                 onChangeText={setPrice} 
-                placeholder="R19.99" 
+                placeholder="9.99" 
                 style={styles.input}
                 keyboardType='numeric'
                 />
-
+            
+            <Text style={{ color: 'red' }}>{errors}</Text>
             <Button onPress={onCreate} text='Create'/>
 
         </View>
@@ -56,6 +113,19 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         padding: 10,
+    },
+
+    image: {
+        width: '50%',
+        aspectRatio: 1,
+        alignSelf: 'center',
+    },
+
+    textButton: {
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        color: Colors.light.tint,
+        marginVertical: 10,
     },
 
     input: {
