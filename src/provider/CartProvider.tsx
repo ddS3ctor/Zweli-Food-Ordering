@@ -28,7 +28,7 @@ export default function CartProvider({ children }: PropsWithChildren) {
   const total = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
-  ).toFixed(2);
+  );
 
   const addItem = (product: Product, size: CartItem['size']) => {
     const existingItem = items.find(
@@ -39,21 +39,23 @@ export default function CartProvider({ children }: PropsWithChildren) {
       return;
     }
 
-    const newCartItem = {
+    const newCartItem: CartItem = {
 			id: randomUUID(),
+      product_id: product.id,
       product,
       size,
       quantity: 1,
     };
 
-    setItems([newCartItem, ...items]);
+    setItems((existingItems) => [newCartItem, ...existingItems]);
   };
 
   const updateQuantity = (itemId: string, amount: 1 | -1) => {
     setItems((existingItems) =>
       existingItems
         .map((it) =>
-          it.id === itemId ? { ...it, quantity: it.quantity + amount } : it
+          it.id === itemId 
+          ? { ...it, quantity: it.quantity + amount } : it
         )
         .filter((item) => item.quantity > 0)
     );
