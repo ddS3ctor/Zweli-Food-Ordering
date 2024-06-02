@@ -16,9 +16,10 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
   return (
     <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
     <Pressable style={styles.container}>
-      <Image source={{ uri: product.image || defaultPizzaImage }} 
-      style= {styles.image} 
-      resizeMode='contain'
+      <Image 
+        source={{ uri: product.image || defaultPizzaImage }} 
+        style= {styles.image} 
+        resizeMode='contain'
       />
 
       <Text style={styles.title}>{product.name}</Text>
