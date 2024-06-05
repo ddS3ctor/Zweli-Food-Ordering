@@ -1,39 +1,25 @@
-// {
-//   "compilerOptions": {
-//     "allowSyntheticDefaultImports": true,
-//     "moduleResolution": "node",
-//     "lib": ["es6", "dom", "esnext.asynciterable"],
-//     "noEmit": true,
-//     "skipLibCheck": true,
-//     "resolveJsonModule": true,
-//     "strict": true,
-//     "baseUrl": ".",
-//     "paths": {
-//       "@/*": [
-//         "./*"
-//       ]
-//     }
-//   },
-//   "include": [
-//     "**/*.ts",
-//     "**/*.tsx",
-//     ".expo/types/**/*.ts",
-//     "expo-env.d.ts"
-//   ],
-//   "exclude": ["node_modules"],
-//   "extends": "expo/tsconfig.base.json"
-// }
-
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "jsx": "react-native",
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "lib": ["es6", "dom", "esnext.asynciterable"],
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
     "strict": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
-      "@assets/*": ["assets/*"]
+      "@assets/*": ["assets/*"],
+      "@utils/*": ["src/utils/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@screens/*": ["src/screens/*"],
+      "@navigation/*": ["src/navigation/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": ["node_modules"]
 }
