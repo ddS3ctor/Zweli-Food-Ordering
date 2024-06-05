@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 
 const index = () => {
 
-  const { session, loading } = useAuth();
+  const { session, loading, isAdmin } = useAuth();
 
   if (loading){
     return <ActivityIndicator />
@@ -17,13 +17,14 @@ const index = () => {
     return <Redirect href={'/sign-in'} />;
   }
 
+  if (!isAdmin){
+    return <Redirect href={'/(user)'} />;
+  }
+
 
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
-      <Link href={'/sign-in'} asChild>
-        <Button text="Sign in" />
-      </Link>
 
       <Link href={'/(user)'} asChild>
         <Button text="User" />
