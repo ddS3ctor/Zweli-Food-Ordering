@@ -4,7 +4,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 
 type AuthData = {
     session: Session | null;
-    profile: any;
+    profile: any,
     loading: boolean;
     isAdmin: boolean;
 };
@@ -36,7 +36,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
                   .single();
                 setProfile(data || null);
               }
-
             setLoading(false);
         };
         fetchSession();
@@ -46,7 +45,16 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
     }, []);
 
-    return <AuthContext.Provider value={{ session, loading , profile, isAdmin: profile?.group === 'ADMIN' }}>{children}</AuthContext.Provider>;
+    return (
+            <AuthContext.Provider value={{ 
+                session, 
+                loading, 
+                profile, 
+                isAdmin: 
+                    profile?.group === 'ADMIN' }}>
+            {children}
+            </AuthContext.Provider>
+        ); 
 }
 
 export const useAuth = () => useContext(AuthContext);

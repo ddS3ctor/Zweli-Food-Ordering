@@ -1,13 +1,11 @@
-
-import React, { useState } from 'react';
+import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from '@/api/products';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, Alert } from 'react-native';
 import Button from '@/components/Button';
 import { defaultPizzaImage } from '@/components/ProductListItem';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as ImagePicker from 'expo-image-picker';
-import { Stack, useLocalSearchParams } from 'expo-router';
-
-
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 
 const CreateProductScreen = () => {
 
@@ -16,8 +14,27 @@ const CreateProductScreen = () => {
     const [errors, setErrors] = useState('');
     const [image, setImage] = useState<string | null >(null);
 
-    const { id } = useLocalSearchParams();
-    const isUpdating = !!id;
+    const { id: idString } = useLocalSearchParams();
+    const id = parseFloat(
+        typeof idString === 'string' ? idString : idString?.[0] || ''
+    );
+    const { data: product, isLoading, error, } = useProduct(id);
+    const isUpdating = !!idString;
+
+    const { mutate: insertProduct } = useInsertProduct();
+    const { mutate: updateProduct } = useUpdateProduct();
+    const { data: updatingProduct } = useProduct(id);
+    const { mutate: deleteProduct } = useDeleteProduct();
+
+    useEffect(() => {
+        if (updatingProduct){
+            setName(updatingProduct.name);
+            setPrice(updatingProduct.price.toString());
+            setImage(updatingProduct.image);
+        }
+    }, [updatingProduct]);
+
+    const router = useRouter();
 
     const resetField = () => {
         setName('');
@@ -25,7 +42,6 @@ const CreateProductScreen = () => {
     };
 
     const validateInput = () => {
-
         setErrors('');
         if (!name){
             setErrors('Name is required!');
@@ -33,7 +49,7 @@ const CreateProductScreen = () => {
         }
 
         if (!price){
-            setErrors('Price is reuired!');
+            setErrors('Price is required!');
             return false;
         }
 
@@ -47,35 +63,40 @@ const CreateProductScreen = () => {
 
     const onSubmit = () => {
         if (isUpdating){
-            onUpdateCreate()
+            onUpdate();
         } else {
             onCreate();
         }
-
     };
 
-    const onUpdateCreate = () => {
-
+    const onUpdate = () => {
         if (!validateInput()){
             return;
         }
 
-        console.warn('Updating Product: ', name);
-
         // save in the database
-        resetField();
+        updateProduct({ id, name, price: parseFloat(price), image}, 
+        {
+            onSuccess:  () => {
+                resetField();
+                router.back();
+            },
+        });
     };
 
     const onCreate = () => {
-
         if (!validateInput()){
             return;
         }
 
-        console.warn('Creating Product: ', name);
-
         // save in the database
-        resetField();
+        insertProduct({ name, price: parseFloat(price), image}, 
+        {
+            onSuccess: () => {
+                resetField();
+                router.back();
+            },
+        });
     };
 
     const pickImage = async () => {
@@ -92,9 +113,13 @@ const CreateProductScreen = () => {
         }
     };
 
-
     const onDelete = () => {
-        console.warn('DELETE!?')
+        deleteProduct(id, {
+            onSuccess: () => {
+                resetField();
+                router.replace('/(admin)');
+            },
+        });
     };
 
     const confirmDelete = () => {
@@ -107,7 +132,7 @@ const CreateProductScreen = () => {
                 style: 'destructive',
                 onPress: onDelete,
             }
-        ])
+        ]);
     };
 
     return (
@@ -146,7 +171,6 @@ const CreateProductScreen = () => {
             <Button onPress={onSubmit} text={isUpdating ? 'Update' : 'Create'}/>
             {isUpdating && <Text onPress={confirmDelete} style={styles.textButton}>Delete</Text>}
         </View>
-
     );
 };
 

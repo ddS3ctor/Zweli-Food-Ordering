@@ -8,16 +8,18 @@ import { supabase } from '@/lib/supabase';
 const SignInScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const [loading, setLoading] = useState(false);
 
   async function signInWithEmail() {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+  
     if (error) Alert.alert(error.message);
     setLoading(false);
-  };
+  }
 
   return (
     <View style={styles.container}>

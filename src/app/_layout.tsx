@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import CartProvider from '@/provider/CartProvider';
 import AuthProvider from '@/provider/AuthProvider';
+import QueryProvider from '@/provider/QueryProvider';
 
 import { useColorScheme } from '@/components/useColorScheme.web';
 
@@ -16,7 +17,6 @@ export {
 } from 'expo-router';
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: '(tabs)',
 };
 
@@ -53,15 +53,17 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <CartProvider>
-          <Stack>
-              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-              <Stack.Screen name="(user)" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
-          </Stack>
-        </CartProvider>
-      </AuthProvider>
+          <QueryProvider>
+              <CartProvider>
+                <Stack>
+                  <Stack.Screen name="(admin)" options={{ headerShown: false }}/>
+                  <Stack.Screen name="(user)" options={{ headerShown: false }}/>
+                  <Stack.Screen name="(auth)" options={{ headerShown: false }}/>
+                  <Stack.Screen name="cart" options={{ presentation: 'modal' }}/>
+                </Stack>
+              </CartProvider>
+          </QueryProvider>
+        </AuthProvider>
         
     </ThemeProvider>
   );

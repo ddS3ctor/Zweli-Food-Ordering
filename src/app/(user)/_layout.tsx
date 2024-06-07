@@ -21,8 +21,8 @@ export default function TabLayout() {
 
   const { session } = useAuth();
 
-  if (!session){
-    return <Redirect href={'/'} />
+  if (!session) {
+    return <Redirect href={'/'} />;
   }
 
   return (
