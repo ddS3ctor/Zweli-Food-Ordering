@@ -17,7 +17,7 @@ const CartScreen = () => {
       />
 
       <Text style={{ marginTop: 20, fontSize: 20, fontWeight: '500' }}>
-        Total: R{total}
+        Total: R{total.toFixed(2)}
       </Text>
       <Button onPress={checkout} text="Checkout" />
 
