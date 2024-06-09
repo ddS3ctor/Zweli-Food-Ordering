@@ -6,6 +6,10 @@ import { defaultPizzaImage } from '@/components/ProductListItem';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import * as FileSystem from 'expo-file-system';
+import { supabase } from '@/lib/supabase';
+import { randomUUID } from 'expo-crypto';
+import { decode } from 'base64-arraybuffer';
 
 const CreateProductScreen = () => {
 
@@ -84,13 +88,15 @@ const CreateProductScreen = () => {
         });
     };
 
-    const onCreate = () => {
+    const onCreate = async () => {
         if (!validateInput()){
             return;
         }
 
+        const imagePath = await uploadImage();
+
         // save in the database
-        insertProduct({ name, price: parseFloat(price), image}, 
+        insertProduct({ name, price: parseFloat(price), image: imagePath}, 
         {
             onSuccess: () => {
                 resetField();
@@ -98,6 +104,25 @@ const CreateProductScreen = () => {
             },
         });
     };
+
+    const uploadImage = async () => {
+        if (!image?.startsWith('file://')) {
+          return;
+        }
+      
+        const base64 = await FileSystem.readAsStringAsync(image, {
+          encoding: 'base64',
+        });
+        const filePath = `${randomUUID()}.png`;
+        const contentType = 'image/png';
+        const { data, error } = await supabase.storage
+          .from('product-images')
+          .upload(filePath, decode(base64), { contentType });
+      
+        if (data) {
+          return data.path;
+        }
+      };
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
