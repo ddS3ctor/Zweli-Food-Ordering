@@ -33,11 +33,6 @@
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
-    },
-    "expo": {
-      "web": {
-        "bundler": "metro"
-      }
     }
   }
 }
