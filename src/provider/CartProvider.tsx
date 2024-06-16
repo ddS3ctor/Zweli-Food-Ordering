@@ -2,7 +2,6 @@ import {
   PropsWithChildren,
   createContext,
   useContext,
-  useEffect,
   useState,
 } from 'react';
 import { CartItem, Tables } from '../types';
